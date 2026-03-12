@@ -1,0 +1,50 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 001-create-products-table
+      author: mete
+      changes:
+        - createTable:
+            schemaName: products
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-products-name-index
+      author: mete
+      changes:
+        - createIndex:
+            schemaName: products
+            tableName: products
+            indexName: idx_products_name
+            columns:
+              - column:
+                  name: name

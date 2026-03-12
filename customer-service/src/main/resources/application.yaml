@@ -1,0 +1,35 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: customer-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ecommerce?currentSchema=customers
+    username: admin
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: customers
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: customers
+
+jwt:
+  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+  expiration-ms: 86400000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs

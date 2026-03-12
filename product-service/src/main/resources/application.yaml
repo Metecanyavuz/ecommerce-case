@@ -1,0 +1,36 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ecommerce?currentSchema=products
+    username: admin
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: products
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: products
+
+# Auth Service ile AYNI secret olmalı
+jwt:
+  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+  expiration-ms: 86400000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs

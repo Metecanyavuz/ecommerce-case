@@ -1,0 +1,50 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 001-create-users-table
+      author: mete
+      changes:
+        - createTable:
+            schemaName: auth
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-users-email-index
+      author: mete
+      changes:
+        - createIndex:
+            schemaName: auth
+            tableName: users
+            indexName: idx_users_email
+            columns:
+              - column:
+                  name: email
