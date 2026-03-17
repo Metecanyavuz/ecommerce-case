@@ -145,5 +145,24 @@
         condition: service_started
     restart: unless-stopped
 
+  admin-service:
+    build: ../admin-service
+    container_name: ecommerce-admin
+    ports:
+      - "8090:8090"
+    environment:
+      SERVICES_AUTH_URL: http://auth-service:8081
+      SERVICES_CUSTOMER_URL: http://customer-service:8082
+      SERVICES_PRODUCT_URL: http://product-service:8083
+      SERVICES_STOCK_URL: http://stock-service:8084
+      SERVICES_ORDER_URL: http://order-service:8085
+    depends_on:
+      - auth-service
+      - customer-service
+      - product-service
+      - stock-service
+      - order-service
+    restart: unless-stopped
+
 volumes:
   postgres_data:

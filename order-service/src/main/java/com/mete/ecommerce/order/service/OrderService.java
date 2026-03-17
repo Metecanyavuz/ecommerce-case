@@ -77,4 +77,12 @@ public class OrderService {
         return orderRepository.findByCustomerId(customerId)
                 .stream().map(OrderResponse::new).toList();
     }
+
+    public OrderResponse updateStatus(Long id, String status) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        order.setStatus(OrderStatus.valueOf(status));
+        return new OrderResponse(orderRepository.save(order));
+    }
+
 }

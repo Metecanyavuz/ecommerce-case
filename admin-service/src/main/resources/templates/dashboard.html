@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<th:block layout:fragment="page-title">Dashboard</th:block>
+<div layout:fragment="content">
+    <div th:if="${error}" class="alert alert-warning rounded-3 mb-4" style="font-size:
+13px;" th:text="${error}"></div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value" th:text="${productCount}">0</div>
+                    <a th:href="@{/admin/products}" class="stat-link">View Products →</a>
+                </div>
+                <i class="bi bi-box-seam stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card green d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Total Customers</div>
+                    <div class="stat-value" style="color:#15803d" th:text="${customerCount}">0</div>
+                    <a th:href="@{/admin/customers}" class="stat-link"
+                       style="color:#16a34a">View Customers →</a>
+                </div>
+                <i class="bi bi-people stat-icon" style="color:#16a34a"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card amber d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" style="color:#b45309" th:text="${orderCount}">0</div>
+                    <a th:href="@{/admin/orders}" class="stat-link"
+                       style="color:#d97706">View Orders →</a>
+                </div>
+                <i class="bi bi-receipt stat-icon" style="color:#d97706"></i>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-semibold">Latest Orders</h6>
+            <a th:href="@{/admin/orders}" class="btn btn-sm btn-navy">View All</a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead><tr>
+                    <th class="ps-4">ID</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Status</th><th>Date</th>
+                </tr></thead>
+                <tbody>
+                <tr th:each="o : ${recentOrders}">
+                    <td class="ps-4"><span class="fw-semibold" th:text="'#' + ${o.id}"></span></td>
+                    <td th:text="${o.customerId}"></td>
+                    <td th:text="${o.productId}"></td>
+                    <td th:text="${o.quantity}"></td>
+                    <td>
+<span th:text="${o.status}"
+      th:class="${o.status == 'CREATED'} ? 'badge badge-navy' :
+(${o.status == 'PAID'} ? 'badge badge-success' :
+(${o.status == 'SHIPPED'} ? 'badge badge-info' :
+(${o.status == 'CANCELLED'} ? 'badge badge-danger' : 'badge badgegray')))">
+</span>
+                    </td>
+                    <td th:text="${o.createdAt != null ?
+#temporals.format(o.createdAt,'dd.MM.yyyy') : '-'}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentOrders)}">
+                    <td colspan="6" class="text-center py-4 text-muted">No order</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div></body></html>

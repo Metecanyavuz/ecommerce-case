@@ -1,0 +1,32 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: admin-service
+  thymeleaf:
+    cache: false
+
+services:
+  auth:
+    url: ${SERVICES_AUTH_URL:http://localhost:8081}
+  customer:
+    url: ${SERVICES_CUSTOMER_URL:http://localhost:8082}
+  product:
+    url: ${SERVICES_PRODUCT_URL:http://localhost:8083}
+  stock:
+    url: ${SERVICES_STOCK_URL:http://localhost:8084}
+  order:
+    url: ${SERVICES_ORDER_URL:http://localhost:8085}
+
+
+# Admin panel giriş bilgileri (Spring Security form login)
+admin:
+  username: admin
+  password: admin123
+
+
+# Auth Service admin kullanıcısı (token almak için)
+auth:
+  admin-email: admin@ecommerce.com
+  admin-password: Admin1234!

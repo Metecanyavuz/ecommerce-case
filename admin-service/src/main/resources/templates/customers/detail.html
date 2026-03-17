@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<th:block layout:fragment="page-title">Customer Info</th:block>
+<div layout:fragment="content">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-semibold mb-0" style="color:#1e3a5f"
+        th:text="${customer.name + ' ' + customer.surname}"></h5>
+    <a th:href="@{/admin/customers}" class="btn btn-sm btn-outline-navy">
+      <i class="bi bi-arrow-left me-1"></i>Geri
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-header"><h6 class="mb-0 fw-semibold">Customer Info</h6></div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-borderless mb-0" style="font-size:13px;">
+            <tr><td class="text-muted" style="width:110px">ID</td>
+              <td class="fw-semibold" th:text="'#'+${customer.id}"></td></tr>
+            <tr><td class="text-muted">Name</td><td th:text="${customer.name}"></td></tr>
+            <tr><td class="text-muted">Surname</td><td th:text="${customer.surname}"></td></tr>
+            <tr><td class="text-muted">Email</td><td th:text="${customer.email}"></td></tr>
+            <tr><td class="text-muted">Phone</td><td th:text="${customer.phone?:'-'}"></td></tr>
+            <tr><td class="text-muted">Address</td><td th:text="${customer.address?:'-'}"></td></tr>
+            <tr><td class="text-muted">Record</td>
+              <td th:text="${customer.createdAt!=null? #temporals.format(customer.createdAt,'dd.MM.yyyy'):'-'}"></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

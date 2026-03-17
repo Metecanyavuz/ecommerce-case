@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4 fw-bold"
+        th:text="${product.id != null ? 'Urun Duzenle' : 'Yeni Urun'}">Product</h2>
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form th:action="${product.id != null ? '/admin/products/' + product.id + '/edit' : '/admin/products/new'}"
+                  th:object="${product}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Product Name *</label>
+                        <input type="text" th:field="*{name}" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label fw-semibold">Price (TL) *</label>
+                        <input type="number" step="0.01" th:field="*{price}" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label fw-semibold">Category</label>
+                        <input type="text" th:field="*{category}" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Description</label>
+                    <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary px-4">Save</button>
+                <a th:href="@{/admin/products}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

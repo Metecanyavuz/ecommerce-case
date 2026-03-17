@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<th:block layout:fragment="page-title">Sipariş Detayı</th:block>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-semibold mb-0" style="color:#1e3a5f"
+            th:text="${order != null ? 'Sipariş #' + order.id : 'Sipariş Detayı'}"></h5>
+        <a th:href="@{/admin/orders}" class="btn btn-sm btn-outline-navy">
+            <i class="bi bi-arrow-left me-1"></i>Geri
+        </a>
+    </div>
+    <div th:if="${order == null}" class="alert alert-warning">Sipariş bulunamadı.</div>
+    <div th:if="${order != null}" class="row g-3">
+        <div class="col-md-7">
+            <div class="card h-100">
+                <div class="card-header"><h6 class="mb-0 fw-semibold">Sipariş Bilgileri</
+                    h6></div>
+                <div class="card-body">
+                    <table class="table table-borderless mb-0" style="font-size:13px;">
+                        <tr>
+                            <td class="text-muted" style="width:130px">Sipariş ID</td>
+                            <td class="fw-semibold" th:text="'#' + ${order.id}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Müşteri ID</td>
+                            <td th:text="${order.customerId}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Ürün ID</td>
+                            <td th:text="${order.productId}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Adet</td>
+                            <td th:text="${order.quantity}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Tarih</td>
+                            <td th:text="${order.createdAt != null ?
+#temporals.format(order.createdAt,'dd.MM.yyyy HH:mm') : '-'}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Durum</td>
+                            <td>
+<span th:text="${order.status}"
+      th:class="${order.status=='CREATED'} ? 'badge badge-navy' :
+(${order.status=='PAID'} ? 'badge badge-success' :
+(${order.status=='SHIPPED'} ? 'badge badge-info' :
+(${order.status=='CANCELLED'} ? 'badge badge-danger' : 'badge
+badge-gray')))">
+</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card h-100">
+                <div class="card-header"><h6 class="mb-0 fw-semibold">Durum Güncelle</h6></
+                div>
+                <div class="card-body">
+                    <p class="text-muted mb-3" style="font-size:12px;">
+                        Sipariş durumunu değiştirmek için aşağıdan yeni durumu seçin.
+                    </p>
+                    <form th:action="@{/admin/orders/{id}/status(id=${order.id})}"
+                          method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Yeni Durum</label>
+                            <select name="status" class="form-select">
+                                <option th:each="s : ${statuses}"
+                                        th:value="${s}"
+                                        th:text="${s}"
+                                        th:selected="${s == order.status}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-navy w-100">
+                            <i class="bi bi-check-lg me-2"></i>Güncelle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div></body></html>

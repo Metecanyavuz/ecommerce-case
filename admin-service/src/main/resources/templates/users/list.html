@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body><div layout:fragment="content">
+    <h2 class="mb-4 fw-bold">Users</h2>
+    <div class="card shadow-sm"><div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark"><tr>
+                <th>ID</th><th>Email</th><th>Role</th><th>Register Date</th>
+            </tr></thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.id}"></td>
+                <td th:text="${u.email}"></td>
+                <td><span class="badge"
+                          th:classappend="${u.role == 'ADMIN'} ? 'bg-danger' : 'bg-success'"
+                          th:text="${u.role}"></span></td>
+                <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div></div>
+</div></body></html>
