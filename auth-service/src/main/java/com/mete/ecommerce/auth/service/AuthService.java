@@ -4,6 +4,7 @@ import com.mete.ecommerce.auth.dto.AuthResponse;
 import com.mete.ecommerce.auth.dto.LoginRequest;
 import com.mete.ecommerce.auth.dto.RegisterRequest;
 import com.mete.ecommerce.auth.entity.User;
+import com.mete.ecommerce.auth.exception.EmailAlreadyExistsException;
 import com.mete.ecommerce.auth.repository.UserRepository;
 import com.mete.ecommerce.auth.security.JwtUtil;
 import io.jsonwebtoken.security.Password;
@@ -22,7 +23,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())){
-            throw new IllegalArgumentException("Email has already registered: " + request.getEmail());
+            throw new EmailAlreadyExistsException(request.getEmail());
         }
         User user = User.builder()
                 .email(request.getEmail())
@@ -30,6 +31,7 @@ public class AuthService {
                 .role(request.getRole().toUpperCase())
                 .build();
 
+        userRepository.save(user);
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
         return new AuthResponse(token, user.getEmail(), user.getRole());
 

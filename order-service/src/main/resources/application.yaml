@@ -25,7 +25,7 @@ spring:
     default-schema: orders
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -39,7 +39,7 @@ jwt:
 # Stock Service URL — Feign bu adresi kullanır
 services:
   stock:
-    url: http://localhost:8084
+    url: ${SERVICES_STOCK_URL:http://localhost:8084}
 
 springdoc:
   swagger-ui:
