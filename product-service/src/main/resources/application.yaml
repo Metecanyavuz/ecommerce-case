@@ -22,7 +22,7 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    default-schema: products
+    default-schema: public
 
 # Auth Service ile AYNI secret olmalı
 jwt:
