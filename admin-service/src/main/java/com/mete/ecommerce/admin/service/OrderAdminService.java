@@ -24,6 +24,7 @@ public class OrderAdminService {
                 HttpMethod.GET, new HttpEntity<>(headers()),
                 new ParameterizedTypeReference<List<OrderDto>>() {}).getBody();
     }
+
     public OrderDto getById(Long id) {
         return restTemplate.exchange(props.getOrder().getUrl() + "/orders/" +
                         id,
@@ -38,6 +39,7 @@ public class OrderAdminService {
         restTemplate.exchange(props.getOrder().getUrl() + "/orders",
                 HttpMethod.POST, new HttpEntity<>(dto, h), OrderDto.class);
     }
+
     public void updateStatus(Long orderId, String status) {
         HttpHeaders h = new HttpHeaders();
         h.set("Authorization", tokenService.bearerHeader());

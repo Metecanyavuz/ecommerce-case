@@ -28,7 +28,7 @@ bootstrap.min.css" rel="stylesheet">
                 <div class="login-header">
                     <div style="font-size:28px;margin-bottom:8px;">🛒</div>
                     <h5 style="color:#fff;margin:0;font-weight:700;">E-Commerce Admin</h5>
-                    <p style="color:#7a93b0;font-size:12px;margin-top:4px;">Management Panel</p>
+                    <p style="color:#7a93b0;font-size:12px;margin-top:4px;">Yönetim Paneli</p>
                 </div>
                 <div class="card-body p-4">
                     <div th:if="${param.error}" class="alert alert-danger py-2" style="fontsize:
@@ -37,16 +37,18 @@ bootstrap.min.css" rel="stylesheet">
                     </div>
                     <form th:action="@{/admin/login}" method="post">
                         <div class="mb-3">
-                            <label class="form-label" style="font-size:13px;font-weight:500;">Username</label>
+                            <label class="form-label" style="font-size:13px;font-weight:
+500;">Kullanıcı Adı</label>
                             <input type="text" name="username" class="form-control"
                                    placeholder="admin" required>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label" style="font-size:13px;font-weight: 500;">Password</label>
+                            <label class="form-label" style="font-size:13px;font-weight:
+500;">Şifre</label>
                             <input type="password" name="password" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-login btn-primary w-100 textwhite">
-                            Login</button>
+                            Giriş Yap</button>
                     </form>
                 </div>
             </div>

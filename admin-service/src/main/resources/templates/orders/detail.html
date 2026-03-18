@@ -16,8 +16,7 @@
     <div th:if="${order != null}" class="row g-3">
         <div class="col-md-7">
             <div class="card h-100">
-                <div class="card-header"><h6 class="mb-0 fw-semibold">Sipariş Bilgileri</
-                    h6></div>
+                <div class="card-header"><h6 class="mb-0 fw-semibold">Sipariş Bilgileri</h6></div>
                 <div class="card-body">
                     <table class="table table-borderless mb-0" style="font-size:13px;">
                         <tr>
@@ -48,8 +47,7 @@
       th:class="${order.status=='CREATED'} ? 'badge badge-navy' :
 (${order.status=='PAID'} ? 'badge badge-success' :
 (${order.status=='SHIPPED'} ? 'badge badge-info' :
-(${order.status=='CANCELLED'} ? 'badge badge-danger' : 'badge
-badge-gray')))">
+(${order.status=='CANCELLED'} ? 'badge badge-danger' : 'badge badge-gray')))">
 </span>
                             </td>
                         </tr>
@@ -59,8 +57,7 @@ badge-gray')))">
         </div>
         <div class="col-md-5">
             <div class="card h-100">
-                <div class="card-header"><h6 class="mb-0 fw-semibold">Durum Güncelle</h6></
-                div>
+                <div class="card-header"><h6 class="mb-0 fw-semibold">Durum Güncelle</h6></div>
                 <div class="card-body">
                     <p class="text-muted mb-3" style="font-size:12px;">
                         Sipariş durumunu değiştirmek için aşağıdan yeni durumu seçin.

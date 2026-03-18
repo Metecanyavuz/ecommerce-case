@@ -2,39 +2,217 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy:       #0f2544;
+            --navy-mid:   #1e3a5f;
+            --navy-light: #2d5a8e;
+            --accent:     #e8a020;
+            --accent-soft:#fff3dc;
+            --surface:    #f7f9fc;
+            --card-bg:    #ffffff;
+            --border:     #e2e8f0;
+            --text-main:  #0f2544;
+            --text-muted: #7a8aaa;
+            --danger:     #e53e3e;
+            --danger-soft:#fff0f0;
+            --success:    #22c55e;
+            --radius:     14px;
+            --shadow:     0 2px 16px 0 rgba(15,37,68,0.08);
+        }
+
+        body { background: var(--surface); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
+
+        /* ── Page Header ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .page-header-left h5 {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 0 0 3px 0;
+            letter-spacing: -.3px;
+        }
+        .page-header-left p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* ── Button ── */
+        .btn-primary-admin {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--navy);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .18s, transform .14s;
+            letter-spacing: .2px;
+        }
+        .btn-primary-admin:hover { background: var(--navy-light); color:#fff; transform: translateY(-1px); }
+        .btn-primary-admin svg { width:16px; height:16px; stroke:#fff; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+
+        /* ── Card ── */
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* ── Table ── */
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table thead tr {
+            background: var(--navy);
+        }
+        .admin-table thead th {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 11.5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            padding: 14px 18px;
+            border: none;
+        }
+        .admin-table thead th:first-child { border-radius: 0; }
+        .admin-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background .13s;
+        }
+        .admin-table tbody tr:last-child { border-bottom: none; }
+        .admin-table tbody tr:hover { background: var(--surface); }
+        .admin-table td {
+            padding: 14px 18px;
+            font-size: 14px;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        /* ID pill */
+        .id-pill {
+            display: inline-block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        /* Name cell */
+        .name-cell { font-weight: 500; color: var(--navy); }
+        .email-cell { color: var(--text-muted); font-size: 13px; }
+
+        /* Action buttons */
+        .btn-detail {
+            display: inline-flex; align-items: center; gap:5px;
+            border: 1.5px solid var(--navy-mid);
+            color: var(--navy-mid);
+            background: transparent;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Syne', sans-serif;
+            padding: 5px 13px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all .15s;
+            letter-spacing: .2px;
+        }
+        .btn-detail:hover { background: var(--navy); color:#fff; border-color: var(--navy); }
+
+        .btn-delete {
+            display: inline-flex; align-items: center; gap:5px;
+            border: 1.5px solid #fca5a5;
+            color: var(--danger);
+            background: transparent;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Syne', sans-serif;
+            padding: 5px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .15s;
+            letter-spacing: .2px;
+        }
+        .btn-delete:hover { background: var(--danger); color:#fff; border-color:var(--danger); }
+
+        .actions-cell { display:flex; align-items:center; gap:8px; }
+
+        /* Empty state */
+        .empty-row td {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
 <body>
-<th:block layout:fragment="page-title">Customers</th:block>
+<th:block layout:fragment="page-title">Müşteriler</th:block>
 <div layout:fragment="content">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <h5 class="fw-semibold mb-1" style="color:#1e3a5f">Customers</h5>
-            <p class="text-muted mb-0" style="font-size:12px;">Kayıtlı tüm müşteriler</p>
+
+    <div class="page-header">
+        <div class="page-header-left">
+            <h5>Müşteriler</h5>
+            <p>Kayıtlı tüm müşterileri görüntülüyorsunuz</p>
         </div>
-        <a th:href="@{/admin/customers/new}" class="btn btn-navy">
-            <i class="bi bi-person-plus me-2"></i>New Customer
+        <a th:href="@{/admin/customers/new}" class="btn-primary-admin">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Yeni Müşteri
         </a>
     </div>
-    <div class="card"><div class="card-body p-0">
-        <table class="table mb-0">
-            <thead><tr>
-                <th class="ps-4">ID</th><th>Name Surname</th><th>Email</th><th>Phone</th><th>Transactions</th>
-            </tr></thead>
+
+    <div class="admin-card">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ad Soyad</th>
+                <th>E-posta</th>
+                <th>Telefon</th>
+                <th>İşlemler</th>
+            </tr>
+            </thead>
             <tbody>
             <tr th:each="c : ${customers}">
-                <td class="ps-4 text-muted fw-semibold" th:text="'#'+${c.id}"></td>
-                <td class="fw-semibold" th:text="${c.name+' '+c.surname}"></td>
-                <td th:text="${c.email}"></td>
-                <td th:text="${c.phone?:'-'}"></td>
+                <td><span class="id-pill" th:text="'#' + ${c.id}"></span></td>
+                <td><span class="name-cell" th:text="${c.name + ' ' + c.surname}"></span></td>
+                <td><span class="email-cell" th:text="${c.email}"></span></td>
+                <td th:text="${c.phone ?: '—'}"></td>
                 <td>
-                    <a th:href="@{/admin/customers/{id}(id=${c.id})}" class="btn btn-sm btnoutline- navy me-1">Detay</a>
-                    <form th:action="@{/admin/customers/{id}/delete(id=${c.id})}"
-                          method="post" class="d-inline"
-                          onsubmit="return confirm('Müşteriyi silmek istediğinize emin misiniz?')">
-                        <button class="btn btn-sm btn-danger">Sil</button>
-                    </form>
+                    <div class="actions-cell">
+                        <a th:href="@{/admin/customers/{id}(id=${c.id})}" class="btn-detail">Detay</a>
+                        <form th:action="@{/admin/customers/{id}/delete(id=${c.id})}"
+                              method="post" class="d-inline"
+                              onsubmit="return confirm('Müşteriyi silmek istediğinize emin misiniz?')">
+                            <button type="submit" class="btn-delete">Sil</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             </tbody>
         </table>
-    </div></div>
-</div></body></html>
+    </div>
+
+</div>
+</body>
+</html>
