@@ -1,3 +1,9 @@
 databaseChangeLog:
+  - changeSet:
+      id: 000-create-products-schema
+      author: mete
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS products;
   - include:
       file: db/changelog/001-create-products-table.yaml
