@@ -2,12 +2,11 @@ package com.mete.ecommerce.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")  // ekle
 class ProductServiceApplicationTests {
-
 	@Test
-	void contextLoads() {
-	}
-
+	void contextLoads() {}
 }

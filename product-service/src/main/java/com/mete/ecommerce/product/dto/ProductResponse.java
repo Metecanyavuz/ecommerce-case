@@ -2,20 +2,22 @@ package com.mete.ecommerce.product.dto;
 
 import com.mete.ecommerce.product.entity.Product;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class ProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final String description;
-    private final BigDecimal price;
-    private final String category;
-    private final LocalDateTime createdAt;
+    private  Long id;
+    private  String name;
+    private  String description;
+    private  BigDecimal price;
+    private  String category;
+    private  LocalDateTime createdAt;
 
     public ProductResponse(Product product) {
         this.id = product.getId();
@@ -25,5 +27,8 @@ public class ProductResponse {
         this.category = product.getCategory();
         this.createdAt = product.getCreatedAt();
     }
+
+    // Test için no-args constructor
+    public ProductResponse() {}
 
 }
