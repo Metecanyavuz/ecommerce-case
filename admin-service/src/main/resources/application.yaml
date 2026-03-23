@@ -28,5 +28,5 @@ admin:
 
 # Auth Service admin kullanıcısı (token almak için)
 auth:
-  admin-email: admin@ecommerce.com
-  admin-password: Admin1234!
+  admin-email: ${AUTH_ADMIN_EMAIL:test@railway.com}
+  admin-password: ${AUTH_ADMIN_PASSWORD:Test1234!}
