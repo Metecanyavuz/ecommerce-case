@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content">
+    <div class="alert alert-danger mt-4">
+        <h4>Hata Oluştu</h4>
+        <p th:text="${error}">Bir hata oluştu.</p>
+    </div>
+    <a href="/admin/dashboard" class="btn btn-primary">Dashboard'a Dön</a>
+</div>
+</body>
+</html>
