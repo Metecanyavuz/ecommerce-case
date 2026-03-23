@@ -23,14 +23,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FeignException.Conflict.class)
     public ResponseEntity<Map<String, String>> handleInsufficientStock(FeignException.Conflict ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Yetersiz stok: " + ex.getMessage()));
+                .body(Map.of("error", "Insufficient stock: " + ex.getMessage()));
     }
 
     // When Stock Service is unavailable
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<Map<String, String>> handleFeign(FeignException ex) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(Map.of("error", "Stock Service erişilemez: " + ex.getMessage()));
+                .body(Map.of("error", "Stock Service unavailable: " + ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

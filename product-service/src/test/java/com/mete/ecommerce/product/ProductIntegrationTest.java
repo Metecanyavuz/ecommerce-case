@@ -42,9 +42,9 @@ class ProductIntegrationTest {
 
     @Test
     @WithMockUser
-    @DisplayName("POST /products → GET /products — eklenen ürün listelenir")
+    @DisplayName("POST /products → GET /products — displays the added product")
     void createAndListProduct_integrationFlow() throws Exception {
-        // 1. Ürün oluştur
+        // 1. Create product
         CreateProductRequest request = new CreateProductRequest();
         request.setName("Laptop");
         request.setPrice(new BigDecimal("999.99"));
@@ -58,19 +58,19 @@ class ProductIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Laptop"))
                 .andExpect(jsonPath("$.id").exists());
 
-        // 2. Ürün listede var mı?
+        // 2. Is product involved in list?
         mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value("Laptop"));
 
-        // 3. DB'de kayıt var mı?
+        // 3. Is there a DB record?
         assertThat(productRepository.findAll()).hasSize(1);
     }
 
     @Test
     @WithMockUser
-    @DisplayName("GET /products/{id} — olmayan ürün 404 döner")
+    @DisplayName("GET /products/{id} — nonexistent product returns 404")
     void getProductById_whenNotFound_shouldReturn404() throws Exception {
         mockMvc.perform(get("/products/9999"))
                 .andExpect(status().isNotFound());
@@ -78,11 +78,11 @@ class ProductIntegrationTest {
 
     @Test
     @WithMockUser
-    @DisplayName("DELETE /products/{id} — ürün silinince DB'den de kalkar")
+    @DisplayName("DELETE /products/{id} — when product is deleted, disappears from db as well")
     void deleteProduct_shouldRemoveFromDatabase() throws Exception {
-        // Önce ürün oluştur
+        // First create product
         CreateProductRequest request = new CreateProductRequest();
-        request.setName("Silinecek Ürün");
+        request.setName("To be deleted product");
         request.setPrice(new BigDecimal("100.00"));
 
         String response = mockMvc.perform(post("/products")
@@ -93,11 +93,11 @@ class ProductIntegrationTest {
 
         Long id = objectMapper.readTree(response).get("id").asLong();
 
-        // Sil
+        // Delete
         mockMvc.perform(delete("/products/" + id).with(csrf()))
                 .andExpect(status().isNoContent());
 
-        // DB'de yok mu?
+        // DB check
         assertThat(productRepository.findById(id)).isEmpty();
     }
 }

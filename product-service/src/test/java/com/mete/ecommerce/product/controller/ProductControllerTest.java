@@ -42,7 +42,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("GET /products - 200 ve liste döner")
+    @DisplayName("GET /products - returns 200 and list")
     void getAllProducts_shouldReturn200() throws Exception {
         ProductResponse response = new ProductResponse();
         response.setId(1L);
@@ -58,7 +58,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("POST /products - 201 ve ürün döner")
+    @DisplayName("POST /products - returns 201 and product")
     void createProduct_shouldReturn201() throws Exception {
         CreateProductRequest request = new CreateProductRequest();
         request.setName("Laptop");
@@ -79,7 +79,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("POST /products - token olmadan 401/403 döner")
+    @DisplayName("POST /products - returns 401/403 without token")
     void createProduct_withoutAuth_shouldReturn403() throws Exception {
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)

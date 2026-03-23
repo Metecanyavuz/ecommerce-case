@@ -53,7 +53,7 @@ class OrderIntegrationTest {
 
     @Test
     @WithMockUser
-    @DisplayName("POST /orders — sipariş oluşturulur, stok düşer, Kafka event gönderilir")
+    @DisplayName("POST /orders — order is created, stock is decremented, Kafka event  is sent")
     void createOrder_fullFlow() throws Exception {
         CreateOrderRequest request = new CreateOrderRequest();
         request.setCustomerId(1L);
@@ -70,26 +70,26 @@ class OrderIntegrationTest {
                 .andExpect(jsonPath("$.customerId").value(1))
                 .andExpect(jsonPath("$.status").value("CREATED"));
 
-        // DB'de kayıt var mı?
+        // does db redcord exist?
         assertThat(orderRepository.findAll()).hasSize(1);
 
-        // Stok düşürüldü mü?
+        // stock decreased?
         verify(stockClient, times(1)).decreaseStock(any());
 
-        // Kafka event gönderildi mi?
+        // Kafka even is sent?
         verify(kafkaTemplate, times(1)).send(anyString(), any(OrderCreatedEvent.class));
     }
 
     @Test
     @WithMockUser
-    @DisplayName("POST /orders — stok servisi hata verince 503 döner")
+    @DisplayName("POST /orders — returns 503 when stock service throws error")
     void createOrder_whenStockFails_shouldReturn500() throws Exception {
         CreateOrderRequest request = new CreateOrderRequest();
         request.setCustomerId(1L);
         request.setProductId(1L);
         request.setQuantity(5);
 
-        doThrow(new RuntimeException("Yetersiz stok"))
+        doThrow(new RuntimeException("Insufficient stock"))
                 .when(stockClient).decreaseStock(any());
 
         mockMvc.perform(post("/orders")
@@ -98,13 +98,13 @@ class OrderIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is5xxServerError());
 
-        // Kafka event gönderilmemeli
+        // Kafka event shouldn't send
         verify(kafkaTemplate, never()).send(anyString(), any());
     }
 
     @Test
     @WithMockUser
-    @DisplayName("GET /orders/{id} — olmayan sipariş 404 döner")
+    @DisplayName("GET /orders/{id} — order doesn't exist, returns 404")
     void getOrder_whenNotFound_shouldReturn404() throws Exception {
         mockMvc.perform(get("/orders/9999"))
                 .andExpect(status().isNotFound());

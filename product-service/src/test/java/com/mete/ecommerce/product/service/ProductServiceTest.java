@@ -47,7 +47,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("getAllProducts - listedeki tüm ürünleri döndürür")
+    @DisplayName("getAllProducts - returns all products in the list")
     void getAllProducts_shouldReturnAllProducts() {
         when(productRepository.findAll()).thenReturn(List.of(sampleProduct));
 
@@ -59,7 +59,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("getProductById - mevcut ürünü döndürür")
+    @DisplayName("getProductById - returns current product")
     void getProductById_whenProductExists_shouldReturnProduct() {
         when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
 
@@ -70,7 +70,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("getProductById - ürün yoksa ProductNotFoundException fırlatır")
+    @DisplayName("getProductById - throws ProductNotFoundException if product does not exist")
     void getProductById_whenProductNotFound_shouldThrowException() {
         when(productRepository.findById(99L)).thenReturn(Optional.empty());
 
@@ -79,7 +79,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("createProduct - ürünü kaydeder ve response döndürür")
+    @DisplayName("createProduct - saves the product and returns response")
     void createProduct_shouldSaveAndReturnProduct() {
         CreateProductRequest request = new CreateProductRequest();
         request.setName("Laptop");
@@ -95,7 +95,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("updateProduct - sadece verilen alanları günceller")
+    @DisplayName("updateProduct - updates only the given fields")
     void updateProduct_shouldUpdateOnlyProvidedFields() {
         UpdateProductRequest request = new UpdateProductRequest();
         request.setPrice(new BigDecimal("799.99"));
@@ -111,7 +111,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("deleteProduct - ürün varsa siler")
+    @DisplayName("deleteProduct - deletes the product if it exists")
     void deleteProduct_whenProductExists_shouldDelete() {
         when(productRepository.existsById(1L)).thenReturn(true);
 
@@ -121,7 +121,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("deleteProduct - ürün yoksa exception fırlatır")
+    @DisplayName("deleteProduct - throws exception if product not found")
     void deleteProduct_whenProductNotFound_shouldThrowException() {
         when(productRepository.existsById(99L)).thenReturn(false);
 

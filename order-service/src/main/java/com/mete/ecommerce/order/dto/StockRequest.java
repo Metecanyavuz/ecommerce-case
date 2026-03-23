@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// Feign üzerinden Stock Service'e gönderilecek DTO
+// DTO to be sent to Stock Service via Feign
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class StockRequest {
