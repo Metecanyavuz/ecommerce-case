@@ -7,14 +7,12 @@ import com.mete.ecommerce.product.entity.Product;
 import com.mete.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/products")
@@ -32,11 +30,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody CreateProductRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.createProduct(request));
-
     }
 
     @PutMapping("/{id}")
