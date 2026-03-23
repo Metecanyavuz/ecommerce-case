@@ -2,13 +2,15 @@
 
 A production-ready e-commerce backend built with **Java 21**, **Spring Boot 3.3**, and a full microservice architecture. Services communicate via **REST (OpenFeign)** and **Apache Kafka** for event-driven workflows.
 
+> 🚀 **Live on Railway:** All services deployed and running.
+
 ---
 
 ## 🏗️ Architecture Overview
 
 ```
                         ┌─────────────────────────────────────────┐
-                        │           Client / Postman / UI         │
+                        │        Client / Postman / Admin UI       │
                         └────────────────┬────────────────────────┘
                                          │ HTTP
               ┌──────────────────────────▼──────────────────────────────┐
@@ -24,6 +26,11 @@ A production-ready e-commerce backend built with **Java 21**, **Spring Boot 3.3*
   JWT validate     JWT validate    decrease       order    ──►  logs events
                                    JWT validate   ├─ Feign ──► Stock (decrease)
                                                   └─ Kafka ──► order-created topic
+
+                        ┌─────────────────────────────────────────┐
+                        │           Admin Service :8090            │
+                        │    Thymeleaf · Dashboard · Full CRUD     │
+                        └─────────────────────────────────────────┘
 ```
 
 ---
@@ -38,6 +45,32 @@ A production-ready e-commerce backend built with **Java 21**, **Spring Boot 3.3*
 | **stock-service** | 8084 | Stock tracking, increase/decrease with safety checks |
 | **order-service** | 8085 | Order management, Feign + Kafka integration |
 | **notification-service** | 8086 | Kafka consumer, email simulation via logs |
+| **admin-service** | 8090 | Thymeleaf admin panel — dashboard, full CRUD |
+
+---
+
+## 🌐 Live URLs (Railway)
+
+| Service | URL |
+|---|---|
+| Auth Service | https://auth-service-production-c384.up.railway.app |
+| Customer Service | https://customer-service-production-0c1a.up.railway.app |
+| Product Service | https://product-service-production-d94d.up.railway.app |
+| Stock Service | https://stock-service-production-40a8.up.railway.app |
+| Order Service | https://order-service-production-8b5d.up.railway.app |
+| Admin Panel | https://admin-service-production-99c2.up.railway.app/admin/login |
+
+---
+
+## 📖 API Documentation (Swagger UI)
+
+| Service | Swagger URL |
+|---|---|
+| Auth | https://auth-service-production-c384.up.railway.app/swagger-ui/index.html |
+| Customer | https://customer-service-production-0c1a.up.railway.app/swagger-ui/index.html |
+| Product | https://product-service-production-d94d.up.railway.app/swagger-ui/index.html |
+| Stock | https://stock-service-production-40a8.up.railway.app/swagger-ui/index.html |
+| Order | https://order-service-production-8b5d.up.railway.app/swagger-ui/index.html |
 
 ---
 
@@ -54,12 +87,16 @@ A production-ready e-commerce backend built with **Java 21**, **Spring Boot 3.3*
 
 ### Database & Messaging
 - PostgreSQL 15 (separate schema per service)
-- Apache Kafka 7.5.0 + Zookeeper
+- Apache Kafka (local) / Railway Kafka (production)
 - Liquibase (schema migration)
+
+### Frontend
+- Thymeleaf + Bootstrap 5 + Bootstrap Icons (Admin Panel)
 
 ### DevOps
 - Docker + Docker Compose
-- GitHub Actions (CI/CD)
+- Railway (cloud deployment)
+- GitHub
 
 ### Documentation
 - Springdoc OpenAPI 2.3.0 (Swagger UI per service)
@@ -75,8 +112,8 @@ A production-ready e-commerce backend built with **Java 21**, **Spring Boot 3.3*
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Metecanyavuz/ecommerce-microservices.git
-cd ecommerce-microservices
+git clone https://github.com/Metecanyavuz/ecommerce-case.git
+cd ecommerce-case
 ```
 
 ### 2. Start infrastructure + all services
@@ -101,19 +138,15 @@ ecommerce-product
 ecommerce-stock
 ecommerce-order
 ecommerce-notification
+ecommerce-admin
 ```
 
----
-
-## 📖 API Documentation (Swagger UI)
-
-| Service | Swagger URL |
-|---|---|
-| Auth | http://localhost:8081/swagger-ui/index.html |
-| Customer | http://localhost:8082/swagger-ui/index.html |
-| Product | http://localhost:8083/swagger-ui/index.html |
-| Stock | http://localhost:8084/swagger-ui/index.html |
-| Order | http://localhost:8085/swagger-ui/index.html |
+### 4. Admin Panel
+```
+http://localhost:8090/admin/login
+Username: admin
+Password: admin123
+```
 
 ---
 
@@ -121,7 +154,7 @@ ecommerce-notification
 
 ```bash
 # 1. Register
-POST http://localhost:8081/auth/register
+POST https://auth-service-production-c384.up.railway.app/auth/register
 {
   "email": "user@example.com",
   "password": "password123",
@@ -129,7 +162,7 @@ POST http://localhost:8081/auth/register
 }
 
 # 2. Login — copy the token from the response
-POST http://localhost:8081/auth/login
+POST https://auth-service-production-c384.up.railway.app/auth/login
 {
   "email": "user@example.com",
   "password": "password123"
@@ -146,19 +179,19 @@ Authorization: Bearer eyJhbGci...
 
 ```bash
 # 1. Add a product
-POST http://localhost:8083/products
+POST /products
 { "name": "Laptop", "price": 999.99, "category": "Electronics" }
 
 # 2. Add stock for the product
-POST http://localhost:8084/stocks/increase
+POST /stocks/increase
 { "productId": 1, "quantity": 100 }
 
 # 3. Add a customer
-POST http://localhost:8082/customers
+POST /customers
 { "name": "John", "surname": "Doe", "email": "john@example.com" }
 
 # 4. Create an order — triggers Kafka event + stock decrease
-POST http://localhost:8085/orders
+POST /orders
 { "customerId": 1, "productId": 1, "quantity": 5 }
 
 # 5. Check notification logs
@@ -169,7 +202,7 @@ docker-compose logs notification-service
 
 ## 🗃️ Database Schema
 
-Each service uses a separate PostgreSQL schema within the same database:
+Each service uses a separate PostgreSQL schema:
 
 | Service | Schema | Tables |
 |---|---|---|
