@@ -34,13 +34,3 @@ springdoc:
   api-docs:
     path: /api-docs
   default-produces-media-type: application/json
-
-scalar:
-  enabled: true
-  path: /scalar
-  url: /api-docs
-  pageTitle: Auth Service API Reference
-  theme: moon
-  darkMode: true
-  showSidebar: true
-  persistAuth: true

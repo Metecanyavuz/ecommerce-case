@@ -25,26 +25,6 @@ admin:
   username: admin
   password: admin123
 
-scalar:
-  enabled: true
-  path: /scalar
-  pageTitle: E-Commerce API Reference
-  theme: moon
-  darkMode: true
-  showSidebar: true
-  persistAuth: true
-  sources:
-    - url: ${SERVICES_AUTH_URL:http://localhost:8081}/api-docs
-      label: Auth Service
-    - url: ${SERVICES_CUSTOMER_URL:http://localhost:8082}/api-docs
-      label: Customer Service
-    - url: ${SERVICES_PRODUCT_URL:http://localhost:8083}/api-docs
-      label: Product Service
-    - url: ${SERVICES_STOCK_URL:http://localhost:8084}/api-docs
-      label: Stock Service
-    - url: ${SERVICES_ORDER_URL:http://localhost:8085}/api-docs
-      label: Order Service
-
 
 # Auth Service admin kullanıcısı (token almak için)
 auth:

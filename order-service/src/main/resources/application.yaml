@@ -45,13 +45,3 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /api-docs
-
-scalar:
-  enabled: true
-  path: /scalar
-  url: /api-docs
-  pageTitle: Order Service API Reference
-  theme: moon
-  darkMode: true
-  showSidebar: true
-  persistAuth: true
