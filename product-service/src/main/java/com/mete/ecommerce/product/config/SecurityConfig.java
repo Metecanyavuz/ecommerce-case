@@ -37,7 +37,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/api-docs/**",
                                 "/v3/api-docs",       // REQUIRED for Springdoc v2+
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/scalar/**"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,"/products/**"

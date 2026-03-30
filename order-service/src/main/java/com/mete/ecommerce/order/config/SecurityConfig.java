@@ -35,7 +35,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/api-docs/**",
                                 "/v3/api-docs",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/scalar/**"
                         ).permitAll()
                         // Geri kalanı token ister
                         .anyRequest().authenticated()

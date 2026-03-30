@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for svc:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/metecan.yavuz/Desktop/ecommerce-case/$svc/src/main/resources/**)",
+      "Bash(done)"
+    ]
+  }
+}
