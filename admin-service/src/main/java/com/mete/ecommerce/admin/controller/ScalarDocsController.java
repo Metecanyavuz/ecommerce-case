@@ -48,7 +48,9 @@ public class ScalarDocsController {
                         { url: '%s/api-docs', title: 'Stock Service' },
                         { url: '%s/api-docs', title: 'Order Service' },
                       ],
+                      proxyUrl: 'https://proxy.scalar.com',
                       theme: 'moon',
+                      layout: 'modern',
                       darkMode: true,
                     })
                   </script>

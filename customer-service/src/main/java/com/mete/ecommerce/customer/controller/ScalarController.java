@@ -1,11 +1,13 @@
 package com.mete.ecommerce.customer.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Hidden
 @Controller
 public class ScalarController {
 
@@ -27,6 +29,7 @@ public class ScalarController {
                     Scalar.createApiReference('#app', {
                       url: '/api-docs',
                       theme: 'moon',
+                      layout: 'modern',
                       darkMode: true,
                     })
                   </script>
