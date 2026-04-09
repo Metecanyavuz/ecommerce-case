@@ -31,8 +31,15 @@ export const options = {
 const client = new grpc.Client();
 client.load(['./proto'], 'product.proto');
 
+// Her VU kendi JS context'inde çalışır — bu flag per-VU'dur.
+// connect() ilk iterasyonda bir kez çağrılır, sonra bağlantı yeniden kullanılır.
+let connected = false;
+
 export default function () {
-  client.connect(GRPC_URL, { plaintext: true });
+  if (!connected) {
+    client.connect(GRPC_URL, { plaintext: true });
+    connected = true;
+  }
 
   // ── ListProducts  (large payload — 1000 products, Protobuf serialization) ─
   const listStart = Date.now();
@@ -42,10 +49,9 @@ export default function () {
   grpcErrorRate.add(listRes.status !== grpc.StatusOK);
 
   check(listRes, {
-    'gRPC ListProducts OK':          (r) => r.status === grpc.StatusOK,
-    'gRPC ListProducts has 1000+':   (r) => r.message && r.message.products && r.message.products.length >= 1000,
+    'gRPC ListProducts OK':        (r) => r.status === grpc.StatusOK,
+    'gRPC ListProducts has 1000+': (r) => r.message && r.message.products && r.message.products.length >= 1000,
   });
 
-  client.close();
   sleep(0.1);
 }
