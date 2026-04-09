@@ -3,6 +3,12 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-products-table
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            schemaName: products
+            tableName: products
       changes:
         - createTable:
             schemaName: products
@@ -40,6 +46,13 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-products-name-index
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            schemaName: products
+            tableName: products
+            indexName: idx_products_name
       changes:
         - createIndex:
             schemaName: products

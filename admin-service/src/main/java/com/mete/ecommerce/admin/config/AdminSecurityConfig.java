@@ -20,7 +20,8 @@ public class AdminSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/admin/login", "/css/**", "/js/**").permitAll()
+                                .requestMatchers("/admin/login", "/css/**", "/js/**",
+                                        "/api-docs/**", "/v3/api-docs/**", "/scalar").permitAll()
                                 .anyRequest().authenticated()
                         )
                         .formLogin(form -> form

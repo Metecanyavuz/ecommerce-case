@@ -3,6 +3,12 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-users-table
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            schemaName: auth
+            tableName: users
       changes:
         - createTable:
             schemaName: auth
@@ -40,6 +46,13 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-users-email-index
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            schemaName: auth
+            tableName: users
+            indexName: idx_users_email
       changes:
         - createIndex:
             schemaName: auth

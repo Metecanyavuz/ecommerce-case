@@ -3,6 +3,12 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-orders-table
       author: metecan
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            schemaName: orders
+            tableName: orders
       changes:
         - createTable:
             schemaName: orders
@@ -45,6 +51,13 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-orders-customer-id-index
       author: metecan
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            schemaName: orders
+            tableName: orders
+            indexName: idx_orders_customer_id
       changes:
         - createIndex:
             schemaName: orders

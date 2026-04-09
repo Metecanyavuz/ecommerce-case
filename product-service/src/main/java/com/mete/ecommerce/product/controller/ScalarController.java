@@ -16,11 +16,12 @@ public class ScalarController {
     public ResponseEntity<String> scalarUi() {
         String html = """
                 <!doctype html>
-                <html>
+                <html lang="en">
                 <head>
-                  <title>Product Service API Reference</title>
+                  <title>Product Service — API Reference</title>
                   <meta charset="utf-8" />
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
+                  <style>body { margin: 0; padding: 0; }</style>
                 </head>
                 <body>
                   <div id="app"></div>
@@ -28,9 +29,22 @@ public class ScalarController {
                   <script>
                     Scalar.createApiReference('#app', {
                       url: '/api-docs',
-                      theme: 'moon',
+                      theme: 'default',
                       layout: 'modern',
                       darkMode: true,
+                      showSidebar: true,
+                      hideModels: false,
+                      hideTestRequestButton: false,
+                      hideSearch: false,
+                      withDefaultFonts: true,
+                      metaData: {
+                        title: 'Product Service API Reference',
+                        description: 'Manages the product catalog including listing, creation, updates, and deletion.',
+                        ogTitle: 'Product Service API Reference',
+                      },
+                      authentication: {
+                        preferredSecurityScheme: 'bearerAuth',
+                      },
                     })
                   </script>
                 </body>

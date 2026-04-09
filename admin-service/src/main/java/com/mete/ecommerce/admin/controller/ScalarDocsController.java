@@ -30,11 +30,12 @@ public class ScalarDocsController {
     public ResponseEntity<String> scalarUi() {
         String html = """
                 <!doctype html>
-                <html>
+                <html lang="en">
                 <head>
-                  <title>E-Commerce API Reference</title>
+                  <title>E-Commerce Platform — API Reference</title>
                   <meta charset="utf-8" />
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
+                  <style>body { margin: 0; padding: 0; }</style>
                 </head>
                 <body>
                   <div id="app"></div>
@@ -42,16 +43,29 @@ public class ScalarDocsController {
                   <script>
                     Scalar.createApiReference('#app', {
                       sources: [
-                        { url: '%s/api-docs', title: 'Auth Service' },
-                        { url: '%s/api-docs', title: 'Customer Service' },
-                        { url: '%s/api-docs', title: 'Product Service' },
-                        { url: '%s/api-docs', title: 'Stock Service' },
-                        { url: '%s/api-docs', title: 'Order Service' },
+                        { url: '%s/api-docs', title: 'Auth Service',     slug: 'auth' },
+                        { url: '%s/api-docs', title: 'Customer Service', slug: 'customer' },
+                        { url: '%s/api-docs', title: 'Product Service',  slug: 'product' },
+                        { url: '%s/api-docs', title: 'Stock Service',    slug: 'stock' },
+                        { url: '%s/api-docs', title: 'Order Service',    slug: 'order' },
+                        { url: '/api-docs',   title: 'Admin Service',    slug: 'admin' },
                       ],
-                      proxyUrl: 'https://proxy.scalar.com',
-                      theme: 'moon',
+                      theme: 'default',
                       layout: 'modern',
                       darkMode: true,
+                      showSidebar: true,
+                      hideModels: false,
+                      hideTestRequestButton: false,
+                      hideSearch: false,
+                      withDefaultFonts: true,
+                      metaData: {
+                        title: 'E-Commerce Platform API Reference',
+                        description: 'Unified API documentation for all e-commerce microservices.',
+                        ogTitle: 'E-Commerce Platform API Reference',
+                      },
+                      authentication: {
+                        preferredSecurityScheme: 'bearerAuth',
+                      },
                     })
                   </script>
                 </body>

@@ -3,6 +3,12 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-stocks-table
       author: metecan
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            schemaName: stocks
+            tableName: stocks
       changes:
         - createTable:
             schemaName: stocks
@@ -36,6 +42,13 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-stocks-product-id-index
       author: metecan
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            schemaName: stocks
+            tableName: stocks
+            indexName: idx_stocks_product_id
       changes:
         - createIndex:
             schemaName: stocks

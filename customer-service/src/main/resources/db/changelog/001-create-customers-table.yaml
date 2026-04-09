@@ -3,6 +3,12 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-customers-table
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            schemaName: customers
+            tableName: customers
       changes:
         - createTable:
             schemaName: customers
@@ -46,6 +52,13 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-customers-email-index
       author: mete
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            schemaName: customers
+            tableName: customers
+            indexName: idx_customers_email
       changes:
         - createIndex:
             schemaName: customers
