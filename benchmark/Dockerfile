@@ -4,6 +4,7 @@ FROM grafana/k6:latest
 # Script ve proto dosyalarını kopyala
 COPY rest-benchmark.js  /scripts/rest-benchmark.js
 COPY grpc-benchmark.js  /scripts/grpc-benchmark.js
+COPY benchmark.js       /scripts/benchmark.js
 COPY proto/             /scripts/proto/
 COPY run-railway.sh     /scripts/run-railway.sh
 
