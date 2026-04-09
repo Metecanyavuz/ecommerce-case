@@ -4,7 +4,14 @@
       "Bash(for svc:*)",
       "Bash(do echo:*)",
       "Read(//c/Users/metecan.yavuz/Desktop/ecommerce-case/$svc/src/main/resources/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(grep -v \"//.*@\")",
+      "Bash(do)",
+      "Bash(echo \"=== $svc pom.xml ===\")",
+      "Read(//c/Users/metecan.yavuz/Desktop/ecommerce-case/$svc/**)",
+      "Bash(echo \"=== $svc application.properties/yml ===\")",
+      "Bash(sed -i 's/springdoc-openapi-starter-webmvc-ui/springdoc-openapi-starter-webmvc-api/g' /c/Users/metecan.yavuz/Desktop/ecommerce-case/$svc/pom.xml)",
+      "Bash(echo \"$svc: done\")"
     ]
   }
 }
