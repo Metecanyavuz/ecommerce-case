@@ -7,3 +7,5 @@ databaseChangeLog:
             sql: CREATE SCHEMA IF NOT EXISTS products;
   - include:
       file: db/changelog/001-create-products-table.yaml
+  - include:
+      file: db/changelog/002-seed-1000-products.yaml

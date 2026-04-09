@@ -23,31 +23,18 @@ export const options = {
     },
   },
   thresholds: {
-    grpc_latency_ms: ['p(95)<1000'],
+    grpc_latency_ms: ['p(95)<2000'],
     grpc_error_rate: ['rate<0.01'],
   },
 };
 
-// k6 gRPC: her VU kendi bağlantısını default() içinde açmalı
 const client = new grpc.Client();
 client.load(['./proto'], 'product.proto');
 
 export default function () {
   client.connect(GRPC_URL, { plaintext: true });
 
-  // ── GetProduct ────────────────────────────────────────────────────────────
-  const getStart = Date.now();
-  const getRes = client.invoke('product.ProductGrpcService/GetProduct', { id: 1 });
-  grpcLatency.add(Date.now() - getStart);
-  grpcRequests.add(1);
-  grpcErrorRate.add(getRes.status !== grpc.StatusOK);
-
-  check(getRes, {
-    'gRPC GetProduct OK':     (r) => r.status === grpc.StatusOK,
-    'gRPC GetProduct has id': (r) => r.message && r.message.id !== undefined,
-  });
-
-  // ── ListProducts ──────────────────────────────────────────────────────────
+  // ── ListProducts  (large payload — 1000 products, Protobuf serialization) ─
   const listStart = Date.now();
   const listRes = client.invoke('product.ProductGrpcService/ListProducts', {});
   grpcLatency.add(Date.now() - listStart);
@@ -55,8 +42,8 @@ export default function () {
   grpcErrorRate.add(listRes.status !== grpc.StatusOK);
 
   check(listRes, {
-    'gRPC ListProducts OK':       (r) => r.status === grpc.StatusOK,
-    'gRPC ListProducts has data': (r) => r.message && r.message.products !== undefined,
+    'gRPC ListProducts OK':          (r) => r.status === grpc.StatusOK,
+    'gRPC ListProducts has 1000+':   (r) => r.message && r.message.products && r.message.products.length >= 1000,
   });
 
   client.close();

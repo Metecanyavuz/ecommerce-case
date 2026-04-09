@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Trend, Rate, Counter } from 'k6/metrics';
 
-const BASE_URL = __ENV.REST_URL || 'http://product-service.railway.internal:8083';
+const BASE_URL = __ENV.REST_URL || 'http://product-service.railway.internal:8080';
 
 const restLatency   = new Trend('rest_latency_ms', true);
 const restErrorRate = new Rate('rest_error_rate');
@@ -23,26 +23,13 @@ export const options = {
     },
   },
   thresholds: {
-    rest_latency_ms: ['p(95)<1000'],
+    rest_latency_ms: ['p(95)<2000'],
     rest_error_rate: ['rate<0.01'],
   },
 };
 
 export default function () {
-  // ── GET /products/1 ──────────────────────────────────────────────────────
-  const getRes = http.get(`${BASE_URL}/products/1`);
-
-  restLatency.add(getRes.timings.duration);
-  restRequests.add(1);
-  restErrorRate.add(getRes.status !== 200);
-
-  check(getRes, {
-    'REST GET status 200':      (r) => r.status === 200,
-    'REST GET has id field':    (r) => JSON.parse(r.body).id !== undefined,
-    'REST GET latency <1000ms': (r) => r.timings.duration < 1000,
-  });
-
-  // ── GET /products ─────────────────────────────────────────────────────────
+  // ── GET /products  (large payload — 1000 products, JSON serialization) ────
   const listRes = http.get(`${BASE_URL}/products`);
 
   restLatency.add(listRes.timings.duration);
@@ -50,8 +37,9 @@ export default function () {
   restErrorRate.add(listRes.status !== 200);
 
   check(listRes, {
-    'REST LIST status 200': (r) => r.status === 200,
-    'REST LIST is array':   (r) => Array.isArray(JSON.parse(r.body)),
+    'REST LIST status 200':     (r) => r.status === 200,
+    'REST LIST is array':       (r) => Array.isArray(JSON.parse(r.body)),
+    'REST LIST has 1000+ items': (r) => JSON.parse(r.body).length >= 1000,
   });
 
   sleep(0.1);

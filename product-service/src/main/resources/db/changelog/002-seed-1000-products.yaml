@@ -1,0 +1,21 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 002-seed-1000-products
+      author: mete
+      preConditions:
+        onFail: MARK_RAN
+        sqlCheck:
+          expectedResult: 0
+          sql: SELECT COUNT(*) FROM products.products WHERE name LIKE 'Seed Product%'
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO products.products (name, description, price, category, created_at)
+              SELECT
+                'Seed Product #' || gs,
+                'This is a benchmark seed product with index ' || gs || '. It has a longer description to increase payload size for serialization comparison between REST JSON and gRPC Protobuf.',
+                ROUND((RANDOM() * 999 + 1)::NUMERIC, 2),
+                (ARRAY['Electronics', 'Clothing', 'Books', 'Sports', 'Home', 'Garden', 'Toys', 'Food', 'Beauty', 'Automotive'])[1 + (gs % 10)],
+                NOW() - (gs || ' minutes')::INTERVAL
+              FROM generate_series(1, 1000) AS gs;
