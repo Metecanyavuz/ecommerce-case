@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.mete.ecommerce.product.grpc";
+option java_outer_classname = "ProductProto";
+
+package product;
+
+// --- Messages ---
+
+message ProductRequest {
+  int64 id = 1;
+}
+
+message Empty {}
+
+message CreateProductGrpcRequest {
+  string name        = 1;
+  string description = 2;
+  string price       = 3;  // BigDecimal → String (precision kaybı olmasın)
+  string category    = 4;
+}
+
+message UpdateProductGrpcRequest {
+  int64  id          = 1;
+  string name        = 2;
+  string description = 3;
+  string price       = 4;
+  string category    = 5;
+}
+
+message DeleteProductRequest {
+  int64 id = 1;
+}
+
+message ProductGrpcResponse {
+  int64  id          = 1;
+  string name        = 2;
+  string description = 3;
+  string price       = 4;
+  string category    = 5;
+  string created_at  = 6;  // LocalDateTime → ISO-8601 String
+}
+
+message ProductListGrpcResponse {
+  repeated ProductGrpcResponse products = 1;
+}
+
+message DeleteProductResponse {
+  bool success = 1;
+}
+
+// --- Service ---
+
+service ProductGrpcService {
+  rpc GetProduct    (ProductRequest)           returns (ProductGrpcResponse);
+  rpc ListProducts  (Empty)                    returns (ProductListGrpcResponse);
+  rpc CreateProduct (CreateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc UpdateProduct (UpdateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc DeleteProduct (DeleteProductRequest)     returns (DeleteProductResponse);
+}
+
+// BigDecimal ve LocalDateTime'ı String olarak taşımak gRPC'nin standart yaklaşımı; precision kaybı olmaz.
