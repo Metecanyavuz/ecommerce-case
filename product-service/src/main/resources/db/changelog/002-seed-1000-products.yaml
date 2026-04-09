@@ -1,7 +1,21 @@
 databaseChangeLog:
 
+  # Eski 1000 küçük ürünü temizle (varsa)
   - changeSet:
-      id: 002-seed-1000-products
+      id: 002-drop-old-seed
+      author: mete
+      preConditions:
+        onFail: MARK_RAN
+        sqlCheck:
+          expectedResult: 1
+          sql: SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM products.products WHERE name LIKE 'Seed Product%' AND LENGTH(description) < 500
+      changes:
+        - sql:
+            sql: DELETE FROM products.products WHERE name LIKE 'Seed Product%';
+
+  # 5000 ürün — description ~3.8 KB → ListProducts response ~20 MB (JSON)
+  - changeSet:
+      id: 002-seed-5000-products
       author: mete
       preConditions:
         onFail: MARK_RAN
@@ -14,8 +28,16 @@ databaseChangeLog:
               INSERT INTO products.products (name, description, price, category, created_at)
               SELECT
                 'Seed Product #' || gs,
-                'This is a benchmark seed product with index ' || gs || '. It has a longer description to increase payload size for serialization comparison between REST JSON and gRPC Protobuf.',
+                'BENCHMARK_PAYLOAD[' || gs || '] ' ||
+                repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-', 59) ||
+                ' | category=' || (ARRAY['Electronics','Clothing','Books','Sports','Home','Garden','Toys','Food','Beauty','Automotive'])[1 + (gs % 10)] ||
+                ' | price_tier=' || (gs % 5) ||
+                ' | stock_level=' || (100 + gs % 900) ||
+                ' | warehouse=WH-' || (1 + gs % 8) ||
+                ' | supplier=SUP-' || LPAD((gs % 50 + 1)::text, 3, '0') ||
+                ' | sku=SKU-' || LPAD(gs::text, 6, '0') ||
+                ' | END_PAYLOAD]',
                 ROUND((RANDOM() * 999 + 1)::NUMERIC, 2),
-                (ARRAY['Electronics', 'Clothing', 'Books', 'Sports', 'Home', 'Garden', 'Toys', 'Food', 'Beauty', 'Automotive'])[1 + (gs % 10)],
+                (ARRAY['Electronics','Clothing','Books','Sports','Home','Garden','Toys','Food','Beauty','Automotive'])[1 + (gs % 10)],
                 NOW() - (gs || ' minutes')::INTERVAL
-              FROM generate_series(1, 1000) AS gs;
+              FROM generate_series(1, 5000) AS gs;
