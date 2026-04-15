@@ -7,6 +7,7 @@ COPY grpc-benchmark.js  /scripts/grpc-benchmark.js
 COPY benchmark.js       /scripts/benchmark.js
 COPY proto/             /scripts/proto/
 COPY run-railway.sh     /scripts/run-railway.sh
+COPY run-aws.sh         /scripts/run-aws.sh
 
 WORKDIR /scripts
 

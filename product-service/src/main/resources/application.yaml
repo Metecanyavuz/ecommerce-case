@@ -11,6 +11,16 @@ spring:
   application:
     name: product-service
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: 10
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false   # LocalDateTime → ISO-8601 string (JSON cache deserialize için gerekli)
+
   autoconfigure:
     exclude:
       - net.devh.boot.grpc.server.autoconfigure.GrpcServerSecurityAutoConfiguration

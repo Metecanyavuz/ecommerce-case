@@ -1,0 +1,17 @@
+services:
+
+  product-service:
+    build: ../product-service
+    container_name: ecommerce-product
+    ports:
+      - "8083:8083"
+      - "9090:9090"   # gRPC
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${RDS_ENDPOINT}:5432/${RDS_DB}?currentSchema=products
+      SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: 86400000
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+    restart: unless-stopped

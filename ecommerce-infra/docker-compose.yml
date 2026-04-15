@@ -45,6 +45,13 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: ecommerce-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
   # ── SERVICES ────────────────────────────────────────────
 
   auth-service:
@@ -90,9 +97,13 @@ services:
       SPRING_DATASOURCE_PASSWORD: secret
       JWT_SECRET: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
       JWT_EXPIRATION_MS: 86400000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
 
   stock-service:

@@ -1,5 +1,6 @@
 package com.mete.ecommerce.product.controller;
 
+import com.mete.ecommerce.product.cache.ProductCacheService;
 import com.mete.ecommerce.product.dto.CreateProductRequest;
 import com.mete.ecommerce.product.dto.ProductResponse;
 import com.mete.ecommerce.product.dto.UpdateProductRequest;
@@ -24,13 +25,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService      productService;
+    private final ProductCacheService productCacheService;
 
     @Operation(summary = "List all products", description = "Returns a list of all products in the catalog.")
     @ApiResponse(responseCode = "200", description = "List returned successfully")
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @Operation(
+        summary = "List all products — Redis JSON cache",
+        description = "Cache-aside: Redis'te JSON bytes olarak saklanır. Cache miss → PostgreSQL → Redis. TTL: 60s."
+    )
+    @ApiResponse(responseCode = "200", description = "List returned (from cache or DB)")
+    @GetMapping("/cached-json")
+    public ResponseEntity<List<ProductResponse>> getAllProductsCachedJson() {
+        return ResponseEntity.ok(productCacheService.getAllProductsJson());
+    }
+
+    @Operation(
+        summary = "List all products — Redis Protobuf cache",
+        description = "Cache-aside: Redis'te Protobuf bytes olarak saklanır. Cache miss → PostgreSQL → Redis. TTL: 60s."
+    )
+    @ApiResponse(responseCode = "200", description = "List returned (from cache or DB)")
+    @GetMapping("/cached-proto")
+    public ResponseEntity<List<ProductResponse>> getAllProductsCachedProto() {
+        return ResponseEntity.ok(productCacheService.getAllProductsProtobuf());
     }
 
     @Operation(summary = "Get product by ID")
