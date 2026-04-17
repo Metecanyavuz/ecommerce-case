@@ -21,3 +21,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+benchmark/logs/*.log
+benchmark/ghz-results/*.json
+!benchmark/logs/.gitkeep

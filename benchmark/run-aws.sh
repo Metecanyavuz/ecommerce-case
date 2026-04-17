@@ -12,13 +12,20 @@
 #    bash run-aws.sh
 #
 #  Opsiyonel:
-#    MAX_SPIKE_VU=200   # default: 500
+#    MAX_SPIKE_VU=200   # default: 100
+#    MAX_RPS=400        # default: 200
+#    MS_POOL_VU=20      # default: 10
+#    MS_MAX_RPS=400     # default: 200
 # ══════════════════════════════════════════════════════════════════════
 set -e
 
 REST_URL=${REST_URL:-"http://localhost:8083"}
 GRPC_URL=${GRPC_URL:-"localhost:9090"}
-MAX_SPIKE_VU=${MAX_SPIKE_VU:-500}
+# c6a.large için makul varsayılanlar — güçlü makine: MAX_SPIKE_VU=500 MAX_RPS=600
+MAX_SPIKE_VU=${MAX_SPIKE_VU:-100}
+MAX_RPS=${MAX_RPS:-200}
+MS_POOL_VU=${MS_POOL_VU:-10}
+MS_MAX_RPS=${MS_MAX_RPS:-200}
 
 # k6 kurulu mu?
 if ! command -v k6 &> /dev/null; then
@@ -58,8 +65,14 @@ echo "║  S3: Yüksek Eşzamanlılık   (ListProducts, ~20MB,    200 VU,   ~75s
 echo "║  S4: Flash Sale Spike      (GetProduct,   0→${MAX_SPIKE_VU} VU,  10s,   ~55s) ║"
 echo "║  S5: Redis JSON Cache      (ListProducts, warm,      50 VU,  ~110s) ║"
 echo "║  S6: Redis Protobuf Cache  (ListProducts, warm,      50 VU,  ~110s) ║"
+echo "║  S7: REST Max Throughput   (GetProduct,  ${MAX_RPS} RPS, ramping,   ~110s) ║"
+echo "║  S9: REST Pool Sim         (GetProduct,  ${MS_POOL_VU} VU, ${MS_MAX_RPS} RPS,          ~80s) ║"
+echo "║  S10: Mixed Workload       (%80 Get +%20 List, REST+gRPC, ~115s×2) ║"
+echo "║  S11: gRPC Proto Cache     (Redis Proto→parseFrom, 50 VU, ~110s)   ║"
 echo "╠══════════════════════════════════════════════════════════════════════╣"
-echo "║  Tahmini toplam süre: ~16 dakika                                     ║"
+echo "║  gRPC MaxTP + Pool + Stream + Cache: ghz-compare.sh (G1-G7)         ║"
+echo "╠══════════════════════════════════════════════════════════════════════╣"
+echo "║  Tahmini toplam süre: ~29 dakika                                     ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -68,6 +81,9 @@ cd "$SCRIPT_DIR"
 REST_URL="$REST_URL" \
 GRPC_URL="$GRPC_URL" \
 MAX_SPIKE_VU="$MAX_SPIKE_VU" \
+MAX_RPS="$MAX_RPS" \
+MS_POOL_VU="$MS_POOL_VU" \
+MS_MAX_RPS="$MS_MAX_RPS" \
 k6 run benchmark.js
 
 echo ""

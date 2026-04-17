@@ -1,11 +1,26 @@
 server:
   port: ${PORT:8083}
+  # gzip compression — REST adil karşılaştırma için.
+  # Production REST API'lerde Accept-Encoding: gzip standarttır; bu olmadan
+  # REST "en kötü haliyle" test edilir. gRPC zaten binary Protobuf kullanıyor.
+  # k6 Accept-Encoding: gzip header göndererek bu path'i aktive eder.
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/plain
+    min-response-size: 1024   # < 1KB payload'ı compress etmek CPU israfı
 
 grpc:
   server:
     port: ${GRPC_PORT:9090}
     reflection:
       enabled: true
+    # ~20MB ListProducts yanıtı için limit artırıldı (default: 4MB)
+    # 5000 ürün × ~3.9 KB ≈ 19.5 MB → 4MB default RESOURCE_EXHAUSTED hatasına yol açıyordu
+    max-inbound-message-size: 20971520   # 20 MB
+    max-outbound-message-size: 20971520  # 20 MB
+    # max-inbound-concurrent-calls: Netty'nin kabul edeceği eşzamanlı RPC üst sınırı.
+    # GrpcConfig.java'daki executor pool (200 thread) ile koordineli çalışır.
+    max-inbound-concurrent-calls: 200
 
 spring:
   application:
@@ -54,3 +69,10 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /api-docs
+
+logging:
+  level:
+    # RST_STREAM: İstemci (ghz/k6) test süresi bitince in-flight stream'leri iptal eder.
+    # "Stream closed before write could take place" → istemci taraflı iptal, sunucu hatası değil.
+    # Benchmark gürültüsünü azaltmak için WARN → ERROR. Gerçek hatalar yine görünür.
+    io.grpc.netty.shaded.io.grpc.netty.NettyServerHandler: ERROR

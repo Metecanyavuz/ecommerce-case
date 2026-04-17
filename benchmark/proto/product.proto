@@ -53,11 +53,13 @@ message DeleteProductResponse {
 // --- Service ---
 
 service ProductGrpcService {
-  rpc GetProduct    (ProductRequest)           returns (ProductGrpcResponse);
-  rpc ListProducts  (Empty)                    returns (ProductListGrpcResponse);
-  rpc CreateProduct (CreateProductGrpcRequest) returns (ProductGrpcResponse);
-  rpc UpdateProduct (UpdateProductGrpcRequest) returns (ProductGrpcResponse);
-  rpc DeleteProduct (DeleteProductRequest)     returns (DeleteProductResponse);
+  rpc GetProduct            (ProductRequest)           returns (ProductGrpcResponse);
+  rpc ListProducts          (Empty)                    returns (ProductListGrpcResponse);
+  rpc StreamProducts        (Empty)                    returns (stream ProductGrpcResponse);
+  rpc ListProductsCachedGrpc(Empty)                    returns (ProductListGrpcResponse);
+  rpc CreateProduct         (CreateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc UpdateProduct         (UpdateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc DeleteProduct         (DeleteProductRequest)     returns (DeleteProductResponse);
 }
 
 // BigDecimal ve LocalDateTime'ı String olarak taşımak gRPC'nin standart yaklaşımı; precision kaybı olmaz.

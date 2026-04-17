@@ -14,4 +14,11 @@ services:
       JWT_EXPIRATION_MS: 86400000
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT:-6379}
+      # Netty direct buffer: gRPC unary call'da tüm proto mesaj tek seferde direct ByteBuffer'a
+      # yazılır (MessageFramer.writeKnownLengthUncompressed). 50 concurrent × ~20MB ListProducts
+      # = ~1000MB direct buffer gerektirir. JVM default limit = -Xmx (~512MB-1GB) yetersiz.
+      # -Xmx512m: heap 512MB (Spring Boot + Hibernate için yeterli)
+      # -XX:MaxDirectMemorySize=2048m: Netty direct buffer için 2GB
+      # Toplam JVM bellek: ~2.5GB → c5.xlarge (4GB RAM) için güvenli.
+      JAVA_TOOL_OPTIONS: "-Xmx512m -XX:MaxDirectMemorySize=2048m"
     restart: unless-stopped

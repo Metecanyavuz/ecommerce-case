@@ -38,7 +38,10 @@ public class ProductCacheService {
 
     static final String JSON_KEY  = "products:list:json";
     static final String PROTO_KEY = "products:list:proto";
-    static final long   TTL_SEC   = 60;
+    // Benchmark süresi ~1400s — 60s TTL setup() warm-up'ı geçersiz kılıyordu.
+    // 3600s: bir oturum boyunca cache stabil kalır; gerçek invalidation testi için
+    // TTL'i kısaltmak yerine Redis'i manuel flush edin (redis-cli FLUSHDB).
+    static final long   TTL_SEC   = 3600;
 
     private final RedisTemplate<String, byte[]> byteRedisTemplate;
     private final ProductRepository             productRepository;
@@ -77,6 +80,25 @@ public class ProductCacheService {
         } catch (Exception e) {
             log.warn("Redis Protobuf cache error — falling back to DB: {}", e.getMessage());
             return fetchFromDb();
+        }
+    }
+
+    // ── gRPC cache — raw bytes ────────────────────────────────────────────────
+    // GrpcProductService'in doğrudan Protobuf bytes okuyup parseFrom() yapması için.
+    // REST path: proto bytes → List<ProductResponse> → Jackson → JSON  (2× dönüşüm)
+    // gRPC path: proto bytes → parseFrom → onNext()                    (1× dönüşüm)
+    // Bu farkı ölçmek S5/S6 REST vs S11 gRPC cache karşılaştırmasının özüdür.
+    public byte[] getAllProductsProtobufBytes() {
+        try {
+            byte[] cached = byteRedisTemplate.opsForValue().get(PROTO_KEY);
+            if (cached != null) return cached;
+            List<ProductResponse> products = fetchFromDb();
+            byte[] bytes = toProtoBytes(products);
+            byteRedisTemplate.opsForValue().set(PROTO_KEY, bytes, TTL_SEC, TimeUnit.SECONDS);
+            return bytes;
+        } catch (Exception e) {
+            log.warn("Redis Protobuf bytes cache error — building fresh: {}", e.getMessage());
+            return toProtoBytes(fetchFromDb());
         }
     }
 

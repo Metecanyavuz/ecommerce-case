@@ -91,6 +91,7 @@ services:
     container_name: ecommerce-product
     ports:
       - "8083:8083"
+      - "9090:9090"   # gRPC (lokal ghz testi için)
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecommerce?currentSchema=products
       SPRING_DATASOURCE_USERNAME: admin
@@ -99,6 +100,8 @@ services:
       JWT_EXPIRATION_MS: 86400000
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      # Bkz. docker-compose.aws.yml — aynı gerekçe
+      JAVA_TOOL_OPTIONS: "-Xmx512m -XX:MaxDirectMemorySize=2048m"
     depends_on:
       postgres:
         condition: service_healthy

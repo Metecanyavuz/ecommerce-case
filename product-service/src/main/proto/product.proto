@@ -53,11 +53,17 @@ message DeleteProductResponse {
 // --- Service ---
 
 service ProductGrpcService {
-  rpc GetProduct    (ProductRequest)           returns (ProductGrpcResponse);
-  rpc ListProducts  (Empty)                    returns (ProductListGrpcResponse);
-  rpc CreateProduct (CreateProductGrpcRequest) returns (ProductGrpcResponse);
-  rpc UpdateProduct (UpdateProductGrpcRequest) returns (ProductGrpcResponse);
-  rpc DeleteProduct (DeleteProductRequest)     returns (DeleteProductResponse);
+  rpc GetProduct            (ProductRequest)           returns (ProductGrpcResponse);
+  rpc ListProducts          (Empty)                    returns (ProductListGrpcResponse);
+  // Server Streaming: her ürün ayrı frame olarak akar — büyük payload için doğal gRPC modeli.
+  // Unary ListProducts'tan farkı: tüm liste serialize edilip tek mesajda gönderilmez;
+  // ilk ürün hemen iletilmeye başlar, TCP flow-control sorunsuz çalışır.
+  rpc StreamProducts        (Empty)                    returns (stream ProductGrpcResponse);
+  // Redis'teki Protobuf bytes → parseFrom → single deserialization (S5/S6 ile adil karşılaştırma).
+  rpc ListProductsCachedGrpc(Empty)                    returns (ProductListGrpcResponse);
+  rpc CreateProduct         (CreateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc UpdateProduct         (UpdateProductGrpcRequest) returns (ProductGrpcResponse);
+  rpc DeleteProduct         (DeleteProductRequest)     returns (DeleteProductResponse);
 }
 
 // BigDecimal ve LocalDateTime'ı String olarak taşımak gRPC'nin standart yaklaşımı; precision kaybı olmaz.
